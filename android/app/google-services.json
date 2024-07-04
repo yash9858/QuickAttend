@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "790295269125",
+    "project_id": "quickattend-6608f",
+    "storage_bucket": "quickattend-6608f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790295269125:android:440353a6605e9ec7bd716c",
+        "android_client_info": {
+          "package_name": "com.yashmistry.quick_attend"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATKMuNlWnFOoAVGMr8JmG1xyQJ47HJ2BM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -85,4 +85,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'quickattend-6608f.appspot.com',
     measurementId: 'G-XMEMDDRTMP',
   );
+
 }
