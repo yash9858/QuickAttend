@@ -12,12 +12,12 @@ class _CalendarBottomState extends State<CalendarBottom> {
     var mh = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(mh * 0.025),
-          child: Column(
+          child: Padding(
+              padding: EdgeInsets.all(mh * 0.025),
+              child: Column(
 
+              )
           )
-        )
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:QuickAttend/ProfilePage/my_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:QuickAttend/AuthPages/login_page.dart';
@@ -11,195 +12,111 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+
+  var Name = ['My Profile', 'Download Report', 'Privacy Policy', 'Help Center', 'Settings'];
+  var icon = [Icons.person, Icons.download, Icons.policy, Icons.help, Icons.settings];
+  var Page = [MyProfile(),SettingsPage(),SettingsPage(),SettingsPage(),SettingsPage()];
   @override
   Widget build(BuildContext context) {
     var mh = MediaQuery.of(context).size.height;
     return Scaffold(
-      body : SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(top: mh * 0.05),
-          child: Column(
-            children: [
-              Center(
-                child: Stack(
-                  children: [
-                    CircleAvatar(
-                      radius : mh * 0.075,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(mh * 0.07),
-                        child: Image.asset(
-                          'asset/logo.jpg',
-                          fit : BoxFit.cover,
+        body : SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(top: mh * 0.05),
+              child: Column(
+                children: [
+                  Center(
+                    child: Stack(
+                      children: [
+                        CircleAvatar(
+                            radius : mh * 0.075,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(mh * 0.07),
+                              child: Image.asset(
+                                'asset/logo.jpg',
+                                fit : BoxFit.cover,
+                              ),
+                            )
                         ),
-                      )
+                        Positioned(
+                            left: mh * 0.1,
+                            bottom: mh * 0.0003,
+                            child: CircleAvatar(
+                              child : IconButton(
+                                icon: const Icon(Icons.camera_alt_outlined),
+                                onPressed: (){},
+                              ),
+                            )
+                        )
+                      ],
                     ),
-                    Positioned(
-                      left: mh * 0.1,
-                      bottom: mh * 0.0003,
-                      child: CircleAvatar(
-                        child : IconButton(
-                          icon: const Icon(Icons.camera_alt_outlined),
-                          onPressed: (){},
+                  ),
+                  SizedBox(height: mh * 0.01,),
+                  Center(
+                    child: Column(
+                      children: [
+                        Text(
+                          'Yash Mistry',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: mh * 0.028
+                          ),
                         ),
-                      )
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(height: mh * 0.01,),
-              Center(
-                child: Column(
-                  children: [
-                    Text(
-                      'Yash Mistry',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: mh * 0.028
-                      ),
+                        Text(
+                          'Name of organization',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey,
+                              fontSize: mh * 0.021
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      'Name of organization',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey,
-                        fontSize: mh * 0.021
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: mh * 0.05,),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: mh * 0.02),
-                child: Column(
-                  children: [
-                    InkWell(
-                          borderRadius: BorderRadius.circular(mh * 0.02),
-                          onTap: (){},
-                          child: Card(
-                            child: ListTile(
-                              leading: Container(
-                                height: mh * 0.05,
-                                width: mh * 0.05,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(mh * 0.05),
-                                ),
-                                child: const Icon(Icons.person),
-                              ),
-                              title: const Text(
-                                'My Profile',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold
+                  ),
+                  SizedBox(height: mh * 0.04,),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: Name.length,
+                    itemBuilder: (context, int index){
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: mh * 0.02),
+                        child: Column(
+                          children: [
+                            InkWell(
+                              borderRadius: BorderRadius.circular(mh * 0.02),
+                              onTap: (){
+                                Get.to(()=> Page[index]);
+                              },
+                              child: Card(
+                                child: ListTile(
+                                  leading: Container(
+                                    height: mh * 0.05,
+                                    width: mh * 0.05,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                      borderRadius: BorderRadius.circular(mh * 0.05),
+                                    ),
+                                    child: Icon(icon[index]),
+                                  ),
+                                  title: Text(
+                                    Name[index],
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+                            SizedBox(height: mh * 0.01,),
+                          ],
                         ),
-                    SizedBox(height: mh * 0.015,),
-                    InkWell(
-                          borderRadius: BorderRadius.circular(mh * 0.02),
-                          onTap: (){},
-                          child: Card(
-                            surfaceTintColor: Colors.grey[400],
-                            child: ListTile(
-                              leading: Container(
-                                height: mh * 0.05,
-                                width: mh * 0.05,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(mh * 0.05),
-                                ),
-                                child: const Icon(Icons.download),
-                              ),
-                              title: const Text(
-                                'Download Report',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                    SizedBox(height: mh * 0.015,),
-                    InkWell(
-                          borderRadius: BorderRadius.circular(mh * 0.02),
-                          onTap: (){},
-                          child: Card(
-                            surfaceTintColor: Colors.grey[400],
-                            child: ListTile(
-                              leading: Container(
-                                height: mh * 0.05,
-                                width: mh * 0.05,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(mh * 0.05),
-                                ),
-                                child: const Icon(Icons.policy),
-                              ),
-                              title: const Text(
-                                'Privacy Policy',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                    SizedBox(height: mh * 0.015,),
-                    InkWell(
-                      borderRadius: BorderRadius.circular(mh * 0.02),
-                      onTap: (){},
-                      child: Card(
-                        surfaceTintColor: Colors.grey[400],
-                        child: ListTile(
-                          leading: Container(
-                            height: mh * 0.05,
-                            width: mh * 0.05,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(mh * 0.05),
-                            ),
-                            child: const Icon(Icons.help),
-                          ),
-                          title: const Text(
-                            'Help Center',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: mh * 0.015,),
-                    InkWell(
-                      borderRadius: BorderRadius.circular(mh * 0.02),
-                      onTap: (){
-                        Get.to(()=> SettingsPage());
-                      },
-                      child: Card(
-                        surfaceTintColor: Colors.grey[400],
-                        child: ListTile(
-                          leading: Container(
-                            height: mh * 0.05,
-                            width: mh * 0.05,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(mh * 0.05),
-                            ),
-                            child: const Icon(Icons.settings),
-                          ),
-                          title: const Text(
-                            'Settings',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: mh * 0.05,),
-                    Container(
+                      );
+                    },
+                  ),
+                  SizedBox(height: mh * 0.03,),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: mh * 0.02),
+                    child: Container(
                       decoration: BoxDecoration(
                         border: BoxBorder.lerp(
                             Border.all(),
@@ -221,14 +138,12 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           )
                       ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
+                    ),
+                  )
+                ],
+              ),
+            )
         )
-      )
     );
   }
 }

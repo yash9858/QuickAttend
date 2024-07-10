@@ -8,6 +8,9 @@ class HomeUser extends StatefulWidget {
 }
 
 class _HomeUserState extends State<HomeUser> {
+
+  var Name = ['Check In', 'Check Out', 'Percentage', 'Total Days'];
+  var iconName = [Icons.login, Icons.logout, Icons.percent, Icons.calendar_month_rounded];
   @override
   Widget build(BuildContext context) {
     var mh = MediaQuery.of(context).size.height;
@@ -55,6 +58,17 @@ class _HomeUserState extends State<HomeUser> {
                   ],
                 ),
                 SizedBox(height: mh * 0.03,),
+                Row(
+                  children: [
+                    Text(
+                      "Today's Attendence",
+                      style: TextStyle(
+                        fontSize: mh * 0.03,
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(height:  mh * 0.02,),
                 GridView.builder(
                     shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -69,32 +83,36 @@ class _HomeUserState extends State<HomeUser> {
                           margin: EdgeInsets.only(bottom: mh * 0.05),
                           elevation: 5.0,
                           child: Padding(
-                            padding: EdgeInsets.only(left :mh * 0.015, right: mh * 0.003),
+                            padding: EdgeInsets.only(left :mh * 0.015),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      'Activity',
-                                      style: TextStyle(
-                                          fontSize: mh * 0.023,
-                                          fontWeight: FontWeight.w600
-                                      ),
-                                    ),
+                                   Expanded(
+                                     child:  Text(
+                                       Name[index],
+                                       style: TextStyle(
+                                           fontSize: mh * 0.022,
+                                           fontWeight: FontWeight.w600
+                                       ),
+                                     ),
+                                   ),
                                     IconButton(
-                                      icon: Icon(Icons.edit, size: mh * 0.03,),
+                                      icon: Icon(iconName[index], size: mh * 0.03,),
                                       onPressed: (){},
                                     )
                                   ],
                                 ),
                                 SizedBox(height: mh * 0.01,),
-                                Text(
-                                  'Description',
-                                  style: TextStyle(
-                                      fontSize: mh * 0.02,
-                                      color: Colors.grey.shade700
+                                Expanded(
+                                  child: Text(
+                                    'Description',
+                                    style: TextStyle(
+                                        fontSize: mh * 0.019,
+                                        color: Colors.grey.shade700
+                                    ),
                                   ),
                                 )
                               ],
