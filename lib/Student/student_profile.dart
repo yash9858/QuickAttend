@@ -3,19 +3,42 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:QuickAttend/AuthPages/login_page.dart';
 import 'package:QuickAttend/ProfilePage/setting.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class StudentProfile extends StatefulWidget {
+  const StudentProfile({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<StudentProfile> createState() => _StudentProfileState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _StudentProfileState extends State<StudentProfile> {
 
   var Name = ['My Profile', 'Download Report', 'Privacy Policy', 'Help Center', 'Settings'];
   var icon = [Icons.person, Icons.download, Icons.policy, Icons.help, Icons.settings];
   var Page = [MyProfile(),SettingsPage(),SettingsPage(),SettingsPage(),SettingsPage()];
+
+  String studentName = '';
+  String studentClass = '';
+
+
+  void initState(){
+    super.initState();
+    _fetchStudentData();
+  }
+
+  Future<void> _fetchStudentData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      setState(() {
+        studentName = userDoc['name'];
+        studentClass = userDoc['class'];
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var mh = MediaQuery.of(context).size.height;
@@ -56,14 +79,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       children: [
                         Text(
-                          'Yash Mistry',
+                          studentName,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: mh * 0.028
                           ),
                         ),
                         Text(
-                          'Name of organization',
+                          studentClass,
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Colors.grey,

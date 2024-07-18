@@ -1,9 +1,9 @@
+import 'package:QuickAttend/Student/student_cal.dart';
+import 'package:QuickAttend/Student/student_home.dart';
 import 'package:flutter/material.dart';
-import 'package:QuickAttend/User/calendar_bottom.dart';
-import 'package:QuickAttend/User/home_page_user.dart';
-import 'package:QuickAttend/User/profile_page.dart';
+import 'package:QuickAttend/Student/student_profile.dart';
 import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 
 class BottomNavigator extends StatefulWidget {
   const BottomNavigator({super.key});
@@ -15,10 +15,28 @@ class BottomNavigator extends StatefulWidget {
 class _BottomNavigatorState extends State<BottomNavigator> {
   late PageController _pageController;
   int selectedIndex = 0;
+  String studentId = '';
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: selectedIndex);
+    _fetchStudentId();
+  }
+
+  Future<void> _fetchStudentId() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        studentId = user.uid;
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   void onButtonPressed(int index) {
@@ -28,14 +46,25 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     _pageController.animateToPage(selectedIndex,
         duration: const Duration(milliseconds: 400), curve: Curves.easeOutQuad);
   }
-  final List<Widget> _listOfWidget = <Widget>[
-    const HomeUser(),
-    const CalendarBottom(),
-    const ProfilePage(),
-  ];
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(
+            backgroundColor: Colors.teal,
+          ),
+        ),
+      );
+    }
+
+    final List<Widget> _listOfWidget = [
+      const StudentHome(),
+      AttendanceCalendar(studentId: studentId),
+      const StudentProfile(),
+    ];
+
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -59,7 +88,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
           ),
           BarItem(
             icon: Icons.calendar_month_rounded,
-            title: 'Calender',
+            title: 'Calendar',
           ),
           BarItem(
             icon: Icons.person,

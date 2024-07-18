@@ -1,6 +1,8 @@
+import 'package:QuickAttend/AuthPages/Function/apple_login.dart';
+import 'package:QuickAttend/AuthPages/Function/google_login.dart';
 import 'package:QuickAttend/AuthPages/utils.dart';
-import 'package:QuickAttend/Student/student_home.dart';
-import 'package:QuickAttend/SubAdmin/sub_admin_home.dart';
+import 'package:QuickAttend/Student/class_select.dart';
+import 'package:QuickAttend/Student/student_bottom_navigation.dart';
 import 'package:QuickAttend/SuperAdmin/super_admin_home.dart';
 import 'package:QuickAttend/Themes/text_box_btn.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ import 'package:QuickAttend/AuthPages/registration_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:auth_buttons/auth_buttons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -25,10 +28,31 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
   bool visible = true;
   bool loading = false;
-  bool check = true;
+  bool rememberMe = false;
 
   final _auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
+
+
+  @override
+  void initState() {
+    super.initState();
+    _checkRememberMe();
+  }
+
+  Future<void> _checkRememberMe() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? remember = prefs.getBool('rememberMe');
+    if (remember == true) {
+      String? email = prefs.getString('email');
+      String? password = prefs.getString('password');
+      if (email != null && password != null) {
+        emailController.text = email;
+        passwordController.text = password;
+        login();
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -43,6 +67,7 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
+      SharedPreferences set = await SharedPreferences.getInstance();
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: emailController.text.toString(),
         password: passwordController.text.toString(),
@@ -53,12 +78,24 @@ class _LoginPageState extends State<LoginPage> {
       if (userDoc.exists) {
         Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
         Utils().toastMessage('Welcome, ${userData['email']}!');
+        if (rememberMe) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setBool('rememberMe', true);
+          prefs.setString('email', emailController.text);
+          prefs.setString('password', passwordController.text);
+        }
         if (userData['role'] == 'SuperAdmin') {
           Get.to(() => const SuperAdminHome());
         } else if (userData['role'] == 'Teacher') {
-          Get.to(() => const SubAdminHome());
+          set.setString('role', userData['role'].toString());
+          Get.to(() => ClassSelect(role : 'role'));
         } else if (userData['role'] == 'Student') {
-          Get.to(() => const StudentHome());
+          if(userData['class']!= null){
+            Get.off(()=> BottomNavigator());
+          }
+          else{
+            Get.to(() => ClassSelect(role : userData['role'].toString()));
+          }
         }
       } else {
         Utils().toastMessage('No user found');
@@ -72,6 +109,7 @@ class _LoginPageState extends State<LoginPage> {
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -181,10 +219,10 @@ class _LoginPageState extends State<LoginPage> {
                                 Row(
                                   children: [
                                     Checkbox(
-                                        value: check,
+                                        value: rememberMe,
                                         onChanged: (value) {
                                           setState(() {
-                                            check = value!;
+                                            rememberMe = value!;
                                           });
                                         }),
                                     Text(
@@ -249,7 +287,7 @@ class _LoginPageState extends State<LoginPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 GoogleAuthButton(
-                                  onPressed: () {},
+                                  onPressed: () => google(),
                                   style: AuthButtonStyle(
                                     buttonType: AuthButtonType.icon,
                                   ),
@@ -261,7 +299,7 @@ class _LoginPageState extends State<LoginPage> {
                                       iconType: AuthIconType.secondary),
                                 ),
                                 AppleAuthButton(
-                                  onPressed: () {},
+                                  onPressed: ()=> apple(),
                                   style: AuthButtonStyle(
                                       buttonType: AuthButtonType.icon),
                                 ),
